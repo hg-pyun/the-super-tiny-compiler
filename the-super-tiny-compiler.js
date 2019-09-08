@@ -842,8 +842,7 @@ function transformer(ast) {
     CallExpression: {
       enter(node, parent) {
 
-        // We start creating a new node `CallExpression` with a nested
-        // `Identifier`.
+        // 중첩된 `Identifier`와 함께 새로운 `CallExpression` 노드를 만듭니다.
         let expression = {
           type: 'CallExpression',
           callee: {
@@ -853,26 +852,23 @@ function transformer(ast) {
           arguments: [],
         };
 
-        // Next we're going to define a new context on the original
-        // `CallExpression` node that will reference the `expression`'s arguments
-        // so that we can push arguments.
+        // 다으므로 우리는 원래의 `CallExpression` 노드에 대해 새로운 컨텍스트를 정의하여,
+        // `expression`의 인자들을 참조하게 할 것입니다.
         node._context = expression.arguments;
 
-        // Then we're going to check if the parent node is a `CallExpression`.
-        // If it is not...
+        // 따라서 우리는 부모 노드가 `CallExpression`인지 체크해야 합니다.
+        // 만약 부모 노드의 타입이 `CallExpression`가 아니라면...
         if (parent.type !== 'CallExpression') {
 
-          // We're going to wrap our `CallExpression` node with an
-          // `ExpressionStatement`. We do this because the top level
-          // `CallExpression` in JavaScript are actually statements.
+          // `CallExpression` 노드를 `ExpressionStatement`로 포장합니다.
+          // 자바스크립트의 최상위 단계인 `CallExpression`이 실제로 문장이기 때문입니다.
           expression = {
             type: 'ExpressionStatement',
             expression: expression,
           };
         }
 
-        // Last, we push our (possibly wrapped) `CallExpression` to the `parent`'s
-        // `context`.
+        // 마지막으로, `parent`의 `context`에 CallExpression(아마도 감싸진)을 추가합니다.
         parent._context.push(expression);
       },
     }
@@ -892,7 +888,7 @@ function transformer(ast) {
 /**
  * 이제 마지막 단계로 넘어갑시다: 코드 제너레이터.
  *
- * 코드제너레이터는 재귀적으로 호출하여 트리의 각 노드들을 하나의 거대한 문자열로 출력할 것입니다.
+ * 코드 제너레이터는 재귀적으로 호출하여 트리의 각 노드들을 하나의 거대한 문자열로 출력할 것입니다.
  */
 
 function codeGenerator(node) {
@@ -906,7 +902,7 @@ function codeGenerator(node) {
       return node.body.map(codeGenerator)
         .join('\n');
 
-    // `ExpressionStatement`의 경우, 중첩된 코드 제네레이터를 호출합니다. 그리고 세미콜론을
+    // `ExpressionStatement`의 경우, 중첩된 코드 제너레이터를 호출합니다. 그리고 세미콜론을
     // 추가합니다...
     case 'ExpressionStatement':
       return (
@@ -915,7 +911,7 @@ function codeGenerator(node) {
       );
 
     // `CallExpression`의 경우, `callee`를 출력한 후 괄호를 열고, `arguments`를 맵으로
-    // 돌면서 코드 제네레이터를 통과시킨 후, 콤마와 함께 join한후 괄호를 닫습니다.
+    // 돌면서 코드 제너레이터를 통과시킨 후, 콤마와 함께 join한 후 괄호를 닫습니다.
     case 'CallExpression':
       return (
         codeGenerator(node.callee) +
