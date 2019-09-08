@@ -804,13 +804,11 @@ function transformer(ast) {
     body: [],
   };
 
-  // Next I'm going to cheat a little and create a bit of a hack. We're going to
-  // use a property named `context` on our parent nodes that we're going to push
-  // nodes to their parent's `context`. Normally you would have a better
-  // abstraction than this, but for our purposes this keeps things simple.
+  // 다음으로 조금 간단한 트릭을 소개하겠습니다. 부모 노드에 `context`라는 속성을 사용해서 노드를 부모 `context`에
+  // 밀어 넣을 겁니다. 보통은 이것보다 추상화 하는게 더 낫겠지만, 우리의 목적을 위해 간략하게 했습니다.
   //
-  // Just take note that the context is a reference *from* the old ast *to* the
-  // new ast.
+  //
+  // 단지 컨텍스는 예전 ast *에서* 새롱누 ast로의 참조라는 것에 주목합니다.
   ast._context = newAst.body;
 
   // 우리는 ast 그리고 visitor와 함께 traverser 함수를 호출하면서 시작합니다.
