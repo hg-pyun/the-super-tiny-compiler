@@ -373,7 +373,7 @@ function tokenizer(input) {
     let char = input[current];
 
     // 우리가 가장 먼저 확인하고 싶은 것은 개방된 괄호 입니다. 나중에 `CallExpression`에
-    // 쓰이겠지만 현재로스는 문자에만 신경을 쓰도록 하겠습니다.
+    // 쓰이겠지만 현재로서는 문자에만 신경을 쓰도록 하겠습니다.
     //
     // 개방된 괄호가 있는지 체크합니다:
     if (char === '(') {
@@ -570,13 +570,13 @@ function parser(tokens) {
       // 이제 이름 토큰을 건너뛰기 위해서 `current`를 증가시킵니다. 
       token = tokens[++current];
 
-      // 그리고 이제 우리는 닫힌 괄호를 만날 때까지 각각의 코튼들이 `CallExpression`의 `params`이
+      // 그리고 이제 우리는 닫힌 괄호를 만날 때까지 각각의 토큰들이 `CallExpression`의 `params`이
       // 되도록 순회하고자 한다.\
       //
       // 이제 재귀안으로 들어가 보자. 무한히 중첩될 수 있는 노드 집합을 분석하려고 시도하는 대신, 
       // 문제를 해결하기 위해 재귀 작업에 의존할 겁니다.
       //
-      // 이것에 대해 설명하기 위해서, Lisp 코드를 가져와보자. 여러분들은 addd 내부에 포함된
+      // 이것에 대해 설명하기 위해서, Lisp 코드를 가져와보자. 여러분들은 add 내부에 포함된
       // 숫자들과 `CallExpression`을 볼 수 있을 것입니다.
       //
       //   (add 2 (subtract 4 2))
@@ -701,7 +701,7 @@ function traverser(ast, visitor) {
   // 넘길 수 있습니다.
   function traverseNode(node, parent) {
 
-    // 우리는 먼저 visitor에 대한 메서드의 존재 여부를 'type'을 테스트하는것으로 시작합니다.
+    // 우리는 먼저 visitor에 대한 메서드의 존재 여부를 'type'을 테스트하는 것으로 시작합니다.
     let methods = visitor[node.type];
 
     // 이 노드 타입에 대한 `enter` 메서드가 있다면 `node`와 `parent`와 함께 호출할 것입니다.
@@ -717,7 +717,7 @@ function traverser(ast, visitor) {
       // 순회할 것입니다.
       //
       // (`traverseArray`는 `traverseNode`를 호출하므로, 따라서 우리는 트리를 재귀적으로 돌고 
-      // 있다는 것을 기억해야합니다)
+      // 있다는 것을 기억해야 합니다)
       case 'Program':
         traverseArray(node.body, node);
         break;
@@ -743,7 +743,7 @@ function traverser(ast, visitor) {
     }
   }
 
-  // 마지막으로 traverser 함수는 `parent`가 없는 ast와 함쎄 `traverseNode`를 호출합니다.
+  // 마지막으로 traverser 함수는 `parent`가 없는 ast와 함께 `traverseNode`를 호출합니다.
   // 왜냐하면 최상위 AST는 부모를 가지고 있지 않기 때문입니다.
   traverseNode(ast, null);
 }
@@ -931,7 +931,7 @@ function codeGenerator(node) {
     case 'StringLiteral':
       return '"' + node.value + '"';
 
-    // 그리고 노드로 인식하지 못한 결우에, error를 던집니다.
+    // 그리고 노드로 인식하지 못한 경우에, error를 던집니다.
     default:
       throw new TypeError(node.type);
   }
